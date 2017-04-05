@@ -1,4 +1,4 @@
-Path Tracer: Nights of the Final Project
+Path Tracer: Nights of the Final Project I
 ======================
 
 **University of Pennsylvania, CIS 561: Advanced Computer Graphics, Final Project
