@@ -54,7 +54,7 @@ implement a post-processing algorithm to reduce the __low-level__ noise in your
 final renders. We recommend using something as simple as a k-means algorithm
 with a high number of buckets to reduce noise without also blurring edges or
 reducing texture quality.
-* #### Other light Sources
+* #### Other light sources
 Implement at least two of the light sources described in Chapter 12 of PBRT,
 aside from `DiffuseAreaLight`, which has already been provided to you. If
 you choose to implement additional light types, each one will be worth 10 extra
