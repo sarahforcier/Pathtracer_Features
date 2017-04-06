@@ -1,8 +1,6 @@
 #include "camera.h"
 
 #include <la.h>
-#include <iostream>
-
 
 Camera::Camera():
     Camera(400, 400)
@@ -22,6 +20,8 @@ Camera::Camera(unsigned int w, unsigned int h, const Vector3f &e, const Vector3f
     height(h),
     near_clip(0.1f),
     far_clip(1000),
+    lensR(0.f),
+    focalD(0.f),
     eye(e),
     ref(r),
     world_up(worldUp)
@@ -35,6 +35,8 @@ Camera::Camera(const Camera &c):
     height(c.height),
     near_clip(c.near_clip),
     far_clip(c.far_clip),
+    lensR(c.lensR),
+    focalD(c.focalD),
     aspect(c.aspect),
     eye(c.eye),
     ref(c.ref),
@@ -51,6 +53,8 @@ void Camera::CopyAttributes(const Camera &c)
     fovy = c.fovy;
     near_clip = c.near_clip;
     far_clip = c.far_clip;
+    lensR = c.lensR;
+    focalD = c.focalD;
     eye = c.eye;
     ref = c.ref;
     look = c.look;
@@ -136,6 +140,13 @@ Ray Camera::RaycastNDC(float ndc_x, float ndc_y) const
 {
     glm::vec3 P = ref + ndc_x*H + ndc_y*V;
     Ray result(eye, glm::normalize(P - eye));
+    if (lensR > 0) {
+        float t = focalD / result.direction.z;
+        Point3f pFocus = result.origin + t * result.direction;
+        Sampler sample = Sampler(100, 0);
+        result.origin = lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
+        result.direction = glm::normalize(pFocus - result.origin);
+    }
     return result;
 }
 

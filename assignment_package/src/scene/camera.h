@@ -4,6 +4,8 @@
 
 #include <raytracing/ray.h>
 #include <openGL/drawable.h>
+#include <warpfunctions.h>
+#include <samplers/sampler.h>
 
 //A perspective projection camera
 //Receives its eye position and reference point from the scene XML file
