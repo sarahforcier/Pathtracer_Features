@@ -14,8 +14,8 @@
       "csg" : [
       	{
       		"shapes" : ["Sphere", "Cube"],
-      		"names" : ["sphere1", "cube1"],
-      		"materials" : "matteBlue",
+      		"name" : "constructiveGeo",
+      		"material" : "matteBlue",
       		"operators" : ["union", "shape", "shape"],
       		"transforms" : [
 	      		{
