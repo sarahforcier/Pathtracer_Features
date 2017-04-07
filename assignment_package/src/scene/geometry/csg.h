@@ -13,12 +13,12 @@ public:
     ~CSG();
     Bounds3f WorldBound() const {
         Bounds3f bound;
-        for (std::shared_ptr<Shape> s : shapes) bound = Union(bound, s->WorldBound());
+        for (std::shared_ptr<Primitive> s : primitives) bound = Union(bound, s->WorldBound());
         return bound;
     }
     bool Intersect(const Ray &ray, Intersection *isect) const;
 
-    std::vector<std::shared_ptr<Shape>> shapes;
+    std::vector<std::shared_ptr<Primitive>> primitives;
     std::vector<operation> operators;
 
 private:

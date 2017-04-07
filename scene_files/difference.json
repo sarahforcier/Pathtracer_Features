@@ -15,7 +15,8 @@
       	{
       		"shapes" : ["Sphere", "Cube"],
       		"name" : "constructiveGeoDiff",
-      		"material" : "matteBlue",
+          "names" : ["sphere1", "cube1"],
+          "materials" : ["matteBlue", "matteWhite"],
       		"operators" : ["difference", "shape", "shape"],
       		"transforms" : [
 	      		{

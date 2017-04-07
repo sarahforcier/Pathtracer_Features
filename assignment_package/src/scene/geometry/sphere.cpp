@@ -45,9 +45,9 @@ bool Sphere::Intersect(const Ray &ray, Intersection *isect) const
         tMin = tMax;
         tMax = INFINITY;
     }
-    if(t >= 0)
+    if(tMin >= 0)
     {
-        Point3f P = glm::vec3(r_loc.origin + t*r_loc.direction);
+        Point3f P = glm::vec3(r_loc.origin + tMin*r_loc.direction);
         InitializeIntersection(isect, tMin, tMax, P);
         return true;
     }

@@ -174,7 +174,7 @@ bool JSONReader::LoadGeometry(QJsonObject &geometry, QMap<QString, std::shared_p
 
 bool JSONReader::LoadCSG(QJsonObject &csgObj, QMap<QString, std::shared_ptr<Material>> mtl_map, const QStringRef &local_path, QList<std::shared_ptr<Primitive>> *primitives, QList<std::shared_ptr<Drawable>> *drawables)
 {
-    QJsonArray shapeList, transformList, operatorList;
+    QJsonArray shapeList, transformList, operatorList, nameList, materialList;
     // make operator array
     if(csgObj.contains(QString("operators"))) operatorList = csgObj["operators"].toArray();
     std::vector<operation> operators;
@@ -199,14 +199,21 @@ bool JSONReader::LoadCSG(QJsonObject &csgObj, QMap<QString, std::shared_ptr<Mate
     }
     // make transform array
     if(csgObj.contains(QString("transforms"))) transformList = csgObj["transforms"].toArray();
+    // make name array
+    if(csgObj.contains(QString("names"))) nameList = csgObj["names"].toArray();
+
+    // make material array
+    if(csgObj.contains(QString("materials"))) materialList = csgObj["materials"].toArray();
+    QMap<QString, std::shared_ptr<Material>>::iterator iter;
 
     // make shapes array
-    std::vector<std::shared_ptr<Shape>> shapes;
+    std::vector<std::shared_ptr<Primitive>> prim_list;
     if(csgObj.contains(QString("shapes"))) {
         shapeList = csgObj["shapes"].toArray(); // array of QJsonValues
         for (int i = 0; i < shapeList.size(); i ++) {
             QJsonValue shapeVal = shapeList.at(i);
             std::shared_ptr<Shape> shape = nullptr;
+
             QString type = shapeVal.toString();
 
             if(QString::compare(type, QString("Sphere")) == 0)
@@ -234,29 +241,31 @@ bool JSONReader::LoadCSG(QJsonObject &csgObj, QMap<QString, std::shared_ptr<Mate
             QJsonObject transform = transformList.at(i).toObject();
             shape->transform = LoadTransform(transform); // add transform
 
-            shapes.push_back(shape);
+            auto primitive = std::make_shared<Primitive>(shape);
+
+            QString name = nameList.at(i).toString(); // add name
+            primitive->name = name;
+
+            QString material_name = materialList.at(i).toString();
+            for (iter = mtl_map.begin(); iter != mtl_map.end(); ++iter) {
+                if(iter.key() == material_name){
+                    primitive->material = iter.value();
+                }
+            }
+            prim_list.push_back(primitive);
         }
     }
 
-    auto csg = std::make_shared<CSG>();
-    csg->shapes = shapes;
+    std::shared_ptr<CSG> csg = std::make_shared<CSG>();
+    csg->primitives = prim_list;
     csg->operators = operators;
-    QMap<QString, std::shared_ptr<Material>>::iterator i;
-    if(csgObj.contains(QString("material"))) {
-        QString material_name = csgObj["material"].toString();
-        for (i = mtl_map.begin(); i != mtl_map.end(); ++i) {
-            if(i.key() == material_name){
-                csg->material = i.value();
-            }
-        }
-    }
 
     if(csgObj.contains(QString("name"))) {
         csg->name = csgObj["name"].toString();
     }
 
     (*primitives).append(csg);
-    for (int i = 0; i < csg->shapes.size(); i++) (*drawables).append(csg->shapes[i]);
+    for (int i = 0; i < csg->primitives.size(); i++) (*drawables).append(csg->primitives[i]->shape);
 
     return true;
 }

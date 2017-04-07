@@ -73,16 +73,17 @@ bool Cube::Intersect(const Ray& r, Intersection* isect) const
     }
     if(t_n < t_f)
     {
+        float tMin, tMax;
         if (t_n > 0) {
-            float tMin = t_n;
-            float tMax = t_f;
+            tMin = t_n;
+            tMax = t_f;
         } else {
-            float tMin = t_f;
-            float tMax = INFINITY;
+            tMin = t_f;
+            tMax = INFINITY;
         }
-        if(t < 0) return false;
+        if(tMin < 0) return false;
         //Lastly, transform the point found in object space by T
-        glm::vec4 P = glm::vec4(r_loc.origin + t*r_loc.direction, 1);
+        glm::vec4 P = glm::vec4(r_loc.origin + tMin*r_loc.direction, 1);
         InitializeIntersection(isect, tMin, tMax, Point3f(P));
         return true;
     }
@@ -90,7 +91,6 @@ bool Cube::Intersect(const Ray& r, Intersection* isect) const
         return false;
     }
 }
-
 
 void Cube::ComputeTBN(const Point3f& P, Normal3f* nor, Vector3f* tan, Vector3f* bit) const
 {

@@ -15,7 +15,8 @@
       	{
       		"shapes" : ["Sphere", "Cube"],
       		"name" : "constructiveGeo",
-      		"material" : "matteBlue",
+          "names" : ["sphere1", "cube1"],
+      		"materials" : ["matteBlue", "matteWhite"],
       		"operators" : ["union", "shape", "shape"],
       		"transforms" : [
 	      		{

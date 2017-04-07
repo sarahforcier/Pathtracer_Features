@@ -183,16 +183,16 @@ void MyGL::GLDrawScene()
     {
         if(d->drawMode() == GL_TRIANGLES)
         {
-//            if(g->areaLight != nullptr)
-//            {
-//                prog_flat.setModelMatrix(g->shape->transform.T());
-//                prog_flat.draw(*this, *g->shape);
-//            }
-//            else
-//            {
-                prog_lambert.setModelMatrix(d->transform.T());
-                prog_lambert.draw(*this, *d);
-//            }
+            //            if(g->areaLight != nullptr)
+            //            {
+            //                prog_flat.setModelMatrix(g->shape->transform.T());
+            //                prog_flat.draw(*this, *g->shape);
+            //            }
+            //            else
+            //            {
+            prog_lambert.setModelMatrix(d->transform.T());
+            prog_lambert.draw(*this, *d);
+            //            }
         }
         else if(d->drawMode() == GL_LINES)
         {
@@ -200,15 +200,15 @@ void MyGL::GLDrawScene()
             prog_flat.draw(*this, *d);
         }
     }
-//    for(std::shared_ptr<Light> l : scene.lights)
-//    {
-//        DiffuseAreaLight* dal = dynamic_cast<DiffuseAreaLight*>(l.get());
-//        if(dal != nullptr)
-//        {
-//            prog_flat.setModelMatrix(dal->shape->transform.T());
-//            prog_flat.draw(*this, *dal->shape);
-//        }
-//    }
+    //    for(std::shared_ptr<Light> l : scene.lights)
+    //    {
+    //        DiffuseAreaLight* dal = dynamic_cast<DiffuseAreaLight*>(l.get());
+    //        if(dal != nullptr)
+    //        {
+    //            prog_flat.setModelMatrix(dal->shape->transform.T());
+    //            prog_flat.draw(*this, *dal->shape);
+    //        }
+    //    }
     prog_flat.setModelMatrix(glm::mat4(1.0f));
     prog_flat.draw(*this, scene.camera);
 }
@@ -229,7 +229,7 @@ void MyGL::ResizeToSceneCamera()
     //        this->setFixedWidth(618);
     //        this->setFixedHeight(618 * scene.camera.aspect);
     //    }
-//    gl_camera = Camera(scene.camera);
+    //    gl_camera = Camera(scene.camera);
 }
 
 void MyGL::keyPressEvent(QKeyEvent *e)
@@ -347,6 +347,11 @@ void MyGL::RenderScene()
     {
         scene.bvh = new BVHAccel(scene.primitives.toVector().toStdVector(), maxBVHPrims);
     }
+    else if(makeBVH && scene.bvh)
+    {
+        scene.clearBVH();
+        scene.bvh = new BVHAccel(scene.primitives.toVector().toStdVector(), maxBVHPrims);
+    }
     else if(!makeBVH && scene.bvh)
     {
         scene.clearBVH();
@@ -414,7 +419,7 @@ void MyGL::RenderScene()
                 rt = new NaiveIntegrator(tileBounds, &scene, sampler->Clone(seed), recursionLimit);
                 break;
             }
-//#define MULTITHREAD // Comment this line out to be able to debug with breakpoints.
+            //#define MULTITHREAD // Comment this line out to be able to debug with breakpoints.
 #ifdef MULTITHREAD
             QThreadPool::globalInstance()->start(rt);
 #else
