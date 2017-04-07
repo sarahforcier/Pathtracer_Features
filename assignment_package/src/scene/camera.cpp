@@ -144,7 +144,7 @@ Ray Camera::RaycastNDC(float ndc_x, float ndc_y) const
         float t = focalD / result.direction.z;
         Point3f pFocus = result.origin + t * result.direction;
         Sampler sample = Sampler(100, 0);
-        result.origin = lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
+        result.origin += lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
         result.direction = glm::normalize(pFocus - result.origin);
     }
     return result;

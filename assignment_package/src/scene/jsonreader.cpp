@@ -24,7 +24,7 @@ void JSONReader::LoadSceneFromFile(QFile &file, const QStringRef &local_path, Sc
         // Get JSON object
         QJsonObject json = doc.object();
         QJsonObject sceneObj, camera;
-        QJsonArray primitiveList, materialList, lightList;
+        QJsonArray primitiveList, materialList, lightList, csgList;
 
         QMap<QString, std::shared_ptr<Material>> mtl_name_to_material;
         QJsonArray frames = json["frames"].toArray();
@@ -50,6 +50,14 @@ void JSONReader::LoadSceneFromFile(QFile &file, const QStringRef &local_path, Sc
                 foreach(const QJsonValue &primitiveVal, primitiveList){
                     QJsonObject primitiveObj = primitiveVal.toObject();
                     LoadGeometry(primitiveObj, mtl_name_to_material, local_path, &scene.primitives, &scene.drawables);
+                }
+            }
+            //load csg and attach materials from QMap
+            if(sceneObj.contains(QString("csg"))) {
+                csgList = sceneObj["csg"].toArray();
+                foreach(const QJsonValue &csgVal, csgList){
+                    QJsonObject csgObj = csgVal.toObject();
+                    LoadCSG(csgObj, mtl_name_to_material, local_path, &scene.primitives, &scene.drawables);
                 }
             }
             //load lights and attach materials from QMap
@@ -82,7 +90,7 @@ bool JSONReader::LoadGeometry(QJsonObject &geometry, QMap<QString, std::shared_p
     bool isMesh = false;
     if(QString::compare(type, QString("Mesh")) == 0)
     {
-//        shape = std::make_shared<Mesh>();
+        //        shape = std::make_shared<Mesh>();
         auto mesh = std::make_shared<Mesh>();
         isMesh = true;
 
@@ -137,10 +145,6 @@ bool JSONReader::LoadGeometry(QJsonObject &geometry, QMap<QString, std::shared_p
         std::cout << "Could not parse the geometry!" << std::endl;
         return NULL;
     }
-
-
-
-
     if(!isMesh)
     {
         // The Mesh class is handled differently
@@ -168,6 +172,95 @@ bool JSONReader::LoadGeometry(QJsonObject &geometry, QMap<QString, std::shared_p
     return true;
 }
 
+bool JSONReader::LoadCSG(QJsonObject &csgObj, QMap<QString, std::shared_ptr<Material>> mtl_map, const QStringRef &local_path, QList<std::shared_ptr<Primitive>> *primitives, QList<std::shared_ptr<Drawable>> *drawables)
+{
+    QJsonArray shapeList, transformList, operatorList;
+    // make operator array
+    if(csgObj.contains(QString("operators"))) operatorList = csgObj["operators"].toArray();
+    std::vector<operation> operators;
+    for (int i = 0; i < operatorList.size(); i++) {
+        QString oper_type = operatorList.at(i).toString();
+        if (QString::compare(oper_type, QString("union")) == 0) {
+            operators.push_back(UNION);
+        }
+        else if (QString::compare(oper_type, QString("difference")) == 0) {
+            operators.push_back(DIFFER);
+        }
+        else if (QString::compare(oper_type, QString("intersection")) == 0) {
+            operators.push_back(INTER);
+        }
+        else if (QString::compare(oper_type, QString("shape")) == 0) {
+            operators.push_back(OBJECT);
+        }
+        else {
+            std::cout << "Could not parse the geometry!" << std::endl;
+            return NULL;
+        }
+    }
+    // make transform array
+    if(csgObj.contains(QString("transforms"))) transformList = csgObj["transforms"].toArray();
+
+    // make shapes array
+    std::vector<std::shared_ptr<Shape>> shapes;
+    if(csgObj.contains(QString("shapes"))) {
+        shapeList = csgObj["shapes"].toArray(); // array of QJsonValues
+        for (int i = 0; i < shapeList.size(); i ++) {
+            QJsonValue shapeVal = shapeList.at(i);
+            std::shared_ptr<Shape> shape = nullptr;
+            QString type = shapeVal.toString();
+
+            if(QString::compare(type, QString("Sphere")) == 0)
+            {
+                shape = std::make_shared<Sphere>();
+            }
+            else if(QString::compare(type, QString("SquarePlane")) == 0)
+            {
+                shape = std::make_shared<SquarePlane>();
+            }
+            else if(QString::compare(type, QString("Cube")) == 0)
+            {
+                shape = std::make_shared<Cube>();
+            }
+            else if(QString::compare(type, QString("Disc")) == 0)
+            {
+                shape = std::make_shared<Disc>();
+            }
+            else
+            {
+                std::cout << "Could not parse the geometry!" << std::endl;
+                return NULL;
+            }
+
+            QJsonObject transform = transformList.at(i).toObject();
+            shape->transform = LoadTransform(transform); // add transform
+
+            shapes.push_back(shape);
+        }
+    }
+
+    auto csg = std::make_shared<CSG>();
+    csg->shapes = shapes;
+    csg->operators = operators;
+    QMap<QString, std::shared_ptr<Material>>::iterator i;
+    if(csgObj.contains(QString("material"))) {
+        QString material_name = csgObj["material"].toString();
+        for (i = mtl_map.begin(); i != mtl_map.end(); ++i) {
+            if(i.key() == material_name){
+                csg->material = i.value();
+            }
+        }
+    }
+
+    if(csgObj.contains(QString("name"))) {
+        csg->name = csgObj["name"].toString();
+    }
+
+    (*primitives).append(csg);
+    for (int i = 0; i < csg->shapes.size(); i++) (*drawables).append(csg->shapes[i]);
+
+    return true;
+}
+
 bool JSONReader::LoadLights(QJsonObject &geometry, QMap<QString, std::shared_ptr<Material>> mtl_map, const QStringRef &local_path, QList<std::shared_ptr<Primitive>> *primitives, QList<std::shared_ptr<Light>> *lights, QList<std::shared_ptr<Drawable> > *drawables)
 {
     std::shared_ptr<Shape> shape = nullptr;
@@ -180,7 +273,7 @@ bool JSONReader::LoadLights(QJsonObject &geometry, QMap<QString, std::shared_ptr
     if(QString::compare(type, QString("Mesh")) == 0)
     {
         Transform transform;
-//        shape = std::make_shared<Mesh>();
+        //        shape = std::make_shared<Mesh>();
         auto mesh = std::make_shared<Mesh>();
         if(geometry.contains(QString("filename"))) {
             QString objFilePath = geometry["filename"].toString();

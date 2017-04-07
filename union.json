@@ -14,9 +14,9 @@
       "csg" : [
       	{
       		"shapes" : ["Sphere", "Cube"],
-      		"name" : "constructiveGeoInter",
+      		"name" : "constructiveGeo",
       		"material" : "matteBlue",
-      		"operators" : ["intersection", "shape", "shape"],
+      		"operators" : ["union", "shape", "shape"],
       		"transforms" : [
 	      		{
 	      			"translate" : [1, 0, 0],
