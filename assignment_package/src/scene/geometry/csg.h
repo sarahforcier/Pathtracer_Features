@@ -23,5 +23,6 @@ public:
 
 private:
     CSGNode *recursiveBuild(int* shape_num, int* oper_num);
+    bool recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect) const;
     CSGNode *root = nullptr;
 };

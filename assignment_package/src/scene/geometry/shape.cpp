@@ -4,12 +4,13 @@
 pcg32 Drawable::colorRNG = pcg32(QDateTime::currentMSecsSinceEpoch());
 
 
-void Shape::InitializeIntersection(Intersection *isect, float t, Point3f pLocal) const
+void Shape::InitializeIntersection(Intersection *isect, float t, float tMax, Point3f pLocal) const
 {
     isect->point = Point3f(transform.T() * glm::vec4(pLocal, 1));
     ComputeTBN(pLocal, &(isect->normalGeometric), &(isect->tangent), &(isect->bitangent));
     isect->uv = GetUVCoordinates(pLocal);
     isect->t = t;
+    isect->tMax = tMax;
 }
 
 Intersection Shape::Sample(const Intersection &ref, const Point2f &xi, float *pdf) const

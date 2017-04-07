@@ -44,7 +44,7 @@ bool Disc::Intersect(const Ray &ray, Intersection *isect) const
     float dist2 = (P.x * P.x + P.y * P.y);
     if(t > 0 && dist2 <= 1.f)
     {
-        InitializeIntersection(isect, t, P);
+        InitializeIntersection(isect, t, INFINITY, P);
         return true;
     }
     return false;

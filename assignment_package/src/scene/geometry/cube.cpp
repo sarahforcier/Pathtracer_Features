@@ -73,12 +73,17 @@ bool Cube::Intersect(const Ray& r, Intersection* isect) const
     }
     if(t_n < t_f)
     {
-        float t = t_n > 0 ? t_n : t_f;
-        if(t < 0)
-            return false;
+        if (t_n > 0) {
+            float tMin = t_n;
+            float tMax = t_f;
+        } else {
+            float tMin = t_f;
+            float tMax = INFINITY;
+        }
+        if(t < 0) return false;
         //Lastly, transform the point found in object space by T
         glm::vec4 P = glm::vec4(r_loc.origin + t*r_loc.direction, 1);
-        InitializeIntersection(isect, t, Point3f(P));
+        InitializeIntersection(isect, tMin, tMax, Point3f(P));
         return true;
     }
     else{//If t_near was greater than t_far, we did not hit the cube

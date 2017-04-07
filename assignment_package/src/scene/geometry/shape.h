@@ -22,7 +22,7 @@ public:
     virtual bool Intersect(const Ray &ray, Intersection *isect) const = 0;
     virtual Point2f GetUVCoordinates(const Point3f &point) const = 0;
     // Given a t parameterization of the Ray, compute all requisite intersection information
-    virtual void InitializeIntersection(Intersection* isect, float t, Point3f pLocal) const;
+    virtual void InitializeIntersection(Intersection* isect, float t, float tMax, Point3f pLocal) const;
 
     // A helper function for computing the world-space normal, tangent, and bitangent at local-space point P
     virtual void ComputeTBN(const Point3f& P, Normal3f* nor, Vector3f* tan, Vector3f* bit) const = 0;

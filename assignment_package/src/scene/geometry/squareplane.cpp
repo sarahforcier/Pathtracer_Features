@@ -43,7 +43,7 @@ bool SquarePlane::Intersect(const Ray &ray, Intersection *isect) const
     //Check that P is within the bounds of the square
     if(t > 0 && P.x >= -0.5f && P.x <= 0.5f && P.y >= -0.5f && P.y <= 0.5f)
     {
-        InitializeIntersection(isect, t, P);
+        InitializeIntersection(isect, t, INFINITY, P);
         return true;
     }
     return false;

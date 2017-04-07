@@ -38,15 +38,17 @@ bool Sphere::Intersect(const Ray &ray, Intersection *isect) const
     if(discriminant < 0){
         return false;
     }
-    float t = (-B - sqrt(discriminant))/(2*A);
-    if(t < 0)
+    float tMin = (-B - sqrt(discriminant))/(2*A);
+    float tMax = (-B + sqrt(discriminant))/(2*A);
+    if(tMin < 0)
     {
-        t = (-B + sqrt(discriminant))/(2*A);
+        tMin = tMax;
+        tMax = INFINITY;
     }
     if(t >= 0)
     {
         Point3f P = glm::vec3(r_loc.origin + t*r_loc.direction);
-        InitializeIntersection(isect, t, P);
+        InitializeIntersection(isect, tMin, tMax, P);
         return true;
     }
     return false;

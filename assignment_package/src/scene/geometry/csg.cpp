@@ -3,7 +3,7 @@
 struct CSGNode {
     void InitLeaf(int index) {
         shape_index = index;
-        oper = -1;
+        oper = 0;
     }
     void InitInterior(int operation, CSGNode *c0, CSGNode *c1) {
         children.push_back(c0);
@@ -51,6 +51,58 @@ CSG::CSG() {
     root = recursiveBuild(&shape_num, &oper_num);
 }
 
-bool CSG::Intersect(const Ray &ray, Intersection *isect) const {
+bool CSG::recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect) const {
+    bool hit = false;
+    Intersection inter;
+    while (true) {
+        Intersection inter0, inter1;
+        bool hit0, hit1;
+        switch (node->oper) {
+            case OBJECT:
+                if (shapes[node->shape_index]->Intersect(ray, &inter)) {
+                    hit = true;
+                    if (inter.t < t) {
+                        t = inter.t;
+                        *isect = inter;
+                    }
+                }
+                break;
+            case UNION:
+                hit0 = recursiveIntersect(node->children[0], ray, &inter0);
+                hit1 = recursiveIntersect(node->children[1], ray, &inter1);
+                if (hit0 || hit1) {
+                    hit = true;
+                    if (inter0.t < isect->t || inter1.t < isect->t) {
+                        if (inter0.t < inter1.t) {
+                            *isect = inter0;
+                        } else if (inter1.t < inter0.t) {
+                            *isect = inter1;
+                        }
+                    }
+                }
+                break;
+            case DIFFER:
+                break;
+            case INTER:
+                hit0 = recursiveIntersect(node->children[0], ray, &inter0);
+                hit1 = recursiveIntersect(node->children[1], ray, &inter1);
+                if (hit0 && hit1) {
+                    hit = true;
+                    if (inter0.t < isect->t || inter1.t < isect->t) {
+                        if (inter0.t < inter1.t) {
+                            *isect = inter0;
+                        } else if (inter1.t < inter0.t) {
+                            *isect = inter1;
+                        }
+                    }
+                }
 
+        }
+    }
+    return hit;
+}
+
+bool CSG::Intersect(const Ray &ray, Intersection *isect) const {
+    isect->t = INFINITY;
+    return recursiveBuild(root, ray, isect);
 }

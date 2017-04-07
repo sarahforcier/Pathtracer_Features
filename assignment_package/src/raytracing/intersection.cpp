@@ -5,6 +5,7 @@ Intersection::Intersection():
     normalGeometric(Normal3f(0)),
     uv(Point2f(0)),
     t(-1),
+    tMax(INFINITY),
     objectHit(nullptr),
     bsdf(nullptr),
     tangent(0.f), bitangent(0.f)
