@@ -4,9 +4,9 @@
 #include <raytracing/ray.h>
 #include <scene/geometry/primitive.h>
 #include <QList>
-#include <scene/geometry/primitive.h>
 
 class Material;
+class Medium;
 class BSDF;
 class Primitive;
 
@@ -29,7 +29,7 @@ public:
 
     // Instantiate a Ray that originates from this Intersection and
     // travels in direction d.
-    Ray SpawnRay(const Vector3f &d) const;
+    const Ray SpawnRay(const Vector3f &d) const;
 
     Point3f point;          // The place at which the intersection occurred
     Normal3f normalGeometric; // The surface normal at the point of intersection, NO alterations like normal mapping applied
@@ -38,6 +38,7 @@ public:
     float t;                  // The parameterization for the ray (in world space) that generated this intersection.
                               // t is equal to the distance from the point of intersection to the ray's origin if the ray's direction is normalized.
     Primitive const * objectHit;     // The object that the ray intersected, or nullptr if the ray hit nothing.
+    Medium * medium;
     std::shared_ptr<BSDF> bsdf;// The Bidirection Scattering Distribution Function found at the intersection.
 
     Vector3f tangent, bitangent; // World-space vectors that form an orthonormal basis with the surface normal.

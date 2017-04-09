@@ -2,6 +2,7 @@
 #include "shape.h"
 #include <scene/lights/light.h>
 #include <scene/materials/material.h>
+#include <scene/mediums/medium.h>
 #include <scene/bounds.h>
 
 // forward declaration only says the class will exist, but not what member functions it will have
@@ -35,6 +36,7 @@ public:
 
     QString name;//Mainly used for debugging purposes
     std::shared_ptr<Shape> shape;
-    std::shared_ptr<Material> material;
+    std::shared_ptr<Material> material; // can be nullptr
     std::shared_ptr<AreaLight> areaLight;
+    std::shared_ptr<MediumInterface> mediumInterface;
 };

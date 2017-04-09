@@ -56,7 +56,11 @@ SOURCES += \
     $$PWD/scene/bounds.cpp \
     $$PWD/scene/bvh.cpp \
     $$PWD/scene/geometry/csg.cpp \
-    $$PWD/scene/geometry/cylinder.cpp
+    $$PWD/scene/geometry/cylinder.cpp \
+    $$PWD/scene/medium.cpp \
+    $$PWD/scene/mediums/phasefunction.cpp \
+    $$PWD/scene/mediums/homogeneousmedium.cpp \
+    $$PWD/integrators/volumetricintegrator.cpp
 
 HEADERS += \
     $$PWD/mainwindow.h \
@@ -114,4 +118,9 @@ HEADERS += \
     $$PWD/scene/bounds.h \
     $$PWD/scene/bvh.h \
     $$PWD/scene/geometry/csg.h \
-    $$PWD/scene/geometry/cylinder.h
+    $$PWD/scene/geometry/cylinder.h \
+    $$PWD/scene/medium.h \
+    $$PWD/scene/mediums/medium.h \
+    $$PWD/scene/mediums/phasefunction.h \
+    $$PWD/scene/mediums/homogeneousmedium.h \
+    $$PWD/integrators/volumetricintegrator.h

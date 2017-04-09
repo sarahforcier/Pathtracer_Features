@@ -40,6 +40,7 @@ bool Scene::Intersect(const Ray &ray, Intersection *isect) const
                 if(testIsect.t < isect->t || isect->t < 0)
                 {
                     *isect = testIsect;
+                    ray.tMax = isect->t;
                     result = true;
                 }
             }
@@ -47,6 +48,20 @@ bool Scene::Intersect(const Ray &ray, Intersection *isect) const
         return result;
     }
     return false;
+}
+
+bool Scene::IntersectTr(const Ray& ray, Sampler &sampler, Intersection* isect, Color3f* Tr) {
+    *Tr = Color3f(1.f);
+    while (true) {
+        bool hitSurface = Intersect(ray, isect);
+        // accumulate beam transmittance for ray segment
+        if (ray.medium) *Tr *= ray.medium->Tr(ray, sampler);
+        // check for termination
+        if (!hitSurface) return false;
+        if (!isect->objectHit->GetMaterial()) return true;
+        // initialize next ray segment in new medium
+        ray = isect->SpawnRay(ray.direction);
+    }
 }
 
 void Scene::CreateTestScene()
