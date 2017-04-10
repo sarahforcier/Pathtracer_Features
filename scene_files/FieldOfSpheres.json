@@ -10,8 +10,8 @@
         "fov" : 19.5,
         "width" : 400,
         "height": 200,
-        "focalDistance": 0.50,
-        "lensRadius": 0.15
+        "focalDistance": 3,
+        "lensRadius": 0.5
       },
       "primitives" : [
         {

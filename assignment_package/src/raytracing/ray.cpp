@@ -3,8 +3,8 @@
 Ray::Ray(const Point3f &o, const Vector3f &d):
     origin(o),
     direction(d),
-    tMax(INFINITY),
-    medium(nullptr)
+    tMax(INFINITY)
+    //medium(nullptr)
 {}
 
 Ray::Ray(const glm::vec4 &o, const glm::vec4 &d):

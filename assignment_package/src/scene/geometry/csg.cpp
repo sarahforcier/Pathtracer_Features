@@ -99,7 +99,6 @@ bool CSG::recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect)
                 *isect = inter0;
             }
         }
-
     }
     return hit;
 }

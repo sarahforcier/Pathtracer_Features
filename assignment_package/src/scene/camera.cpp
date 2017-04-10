@@ -139,14 +139,15 @@ Ray Camera::Raycast(float x, float y) const
 Ray Camera::RaycastNDC(float ndc_x, float ndc_y) const
 {
     glm::vec3 P = ref + ndc_x*H + ndc_y*V;
-    Ray result(eye, glm::normalize(P - eye));
+    Ray result(Vector3f(0.f), glm::normalize(P - eye));
     if (lensR > 0) {
         float t = focalD / result.direction.z;
-        Point3f pFocus = result.origin + t * result.direction;
+        Point3f pFocus = t * result.direction;
         Sampler sample = Sampler(100, 0);
-        result.origin += lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
+        result.origin = lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
         result.direction = glm::normalize(pFocus - result.origin);
     }
+    result.origin += eye;
     return result;
 }
 

@@ -2,7 +2,7 @@
 #include "shape.h"
 #include <scene/lights/light.h>
 #include <scene/materials/material.h>
-#include <scene/mediums/medium.h>
+//#include <scene/mediums/medium.h>
 #include <scene/bounds.h>
 
 // forward declaration only says the class will exist, but not what member functions it will have
@@ -24,7 +24,7 @@ public:
     {}
     // Returns whether or not the given Ray intersects this Primitive.
     // Passes additional intersection data through the Intersection pointer
-    bool Intersect(const Ray& r, Intersection* isect) const;
+    virtual bool Intersect(const Ray& r, Intersection* isect) const;
 
     const AreaLight* GetAreaLight() const;
     const Material* GetMaterial() const;
@@ -38,5 +38,5 @@ public:
     std::shared_ptr<Shape> shape;
     std::shared_ptr<Material> material; // can be nullptr
     std::shared_ptr<AreaLight> areaLight;
-    std::shared_ptr<MediumInterface> mediumInterface;
+    //std::shared_ptr<MediumInterface> mediumInterface;
 };

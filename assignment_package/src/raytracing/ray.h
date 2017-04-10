@@ -18,5 +18,5 @@ public:
     Point3f origin;
     Vector3f direction;
     float tMax;
-//    const Medium *medium;
+    //const Medium *medium;
 };

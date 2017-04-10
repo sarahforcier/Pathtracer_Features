@@ -31,11 +31,11 @@ public:
     void CreateTestScene();
     void Clear();
 
-    bool Intersect(const Ray& ray, Intersection* isect) const;
+    bool Intersect(const Ray &ray, Intersection* isect) const;
 
     // returns first intersection with a light-scattering surface along the given ray
     // returns beam transmittance up to that point of intersection
-    bool IntersectTr(const Ray& ray, Sampler &sampler, Intersection* isect, Color3f* Tr);
+    //bool IntersectTr(const Ray& ray, Sampler &sampler, Intersection* isect, Color3f* Tr);
 
     void clearBVH();
 };

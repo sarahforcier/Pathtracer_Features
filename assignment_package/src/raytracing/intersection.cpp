@@ -7,7 +7,7 @@ Intersection::Intersection():
     t(-1),
     tMax(INFINITY),
     objectHit(nullptr),
-    mediumInterface(nullptr),
+    //mediumInterface(nullptr),
     bsdf(nullptr),
     tangent(0.f), bitangent(0.f)
 {}
@@ -23,7 +23,7 @@ Color3f Intersection::Le(const Vector3f &wo) const
     return light ? light->L(*this, wo) : Color3f(0.f);
 }
 
-const Ray Intersection::SpawnRay(const Vector3f &d) const
+Ray Intersection::SpawnRay(const Vector3f &d) const
 {
     Vector3f originOffset = normalGeometric * RayEpsilon;
     // Make sure to flip the direction of the offset so it's in
