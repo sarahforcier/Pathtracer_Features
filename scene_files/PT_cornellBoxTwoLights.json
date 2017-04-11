@@ -11,7 +11,7 @@
         "width" : 400,
         "height": 400,
         "focalDistance": 30,
-        "lensRadius": 4
+        "lensRadius": 2.0
       },
       "primitives" : [
         {

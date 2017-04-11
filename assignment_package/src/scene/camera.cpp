@@ -23,7 +23,8 @@ Camera::Camera(unsigned int w, unsigned int h, const Vector3f &e, const Vector3f
     focalD(0.f),
     eye(e),
     ref(r),
-    world_up(worldUp)
+    world_up(worldUp),
+    sampler(new Sampler(100,0))
 {
     RecomputeAttributes();
 }
@@ -44,7 +45,8 @@ Camera::Camera(const Camera &c):
     right(c.right),
     world_up(c.world_up),
     V(c.V),
-    H(c.H)
+    H(c.H),
+    sampler(c.sampler)
 {}
 
 void Camera::CopyAttributes(const Camera &c)
@@ -64,6 +66,7 @@ void Camera::CopyAttributes(const Camera &c)
     aspect = c.aspect;
     V = c.V;
     H = c.H;
+    sampler = c.sampler;
 }
 
 void Camera::RecomputeAttributes()
@@ -147,8 +150,7 @@ Ray Camera::RaycastNDC(float ndc_x, float ndc_y) const
     if (lensR > 0) {
         float t = glm::abs(focalD / result.direction.z);
         Point3f pFocus = result.origin + t * result.direction;
-        Sampler sample = Sampler(100, 7);
-        result.origin = lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
+        result.origin = lensR * WarpFunctions::squareToDiskConcentric(sampler->Get2D());
         result.direction = glm::normalize(pFocus - result.origin);
     }
     result.origin += eye;

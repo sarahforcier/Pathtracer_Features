@@ -2,12 +2,8 @@
 #include <QImage>
 #include <QColor>
 
-Film::Film() : Film(400, 400){}
+void Film::PostProcess() {
 
-Film::Film(unsigned int width, unsigned int height)
-    : bounds(Point2i(0.f, 0.f), Point2i(width, height))
-{
-    SetDimensions(width, height);
 }
 
 void Film::SetDimensions(unsigned int w, unsigned int h)

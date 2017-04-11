@@ -161,7 +161,7 @@ void MyGL::resizeGL(int w, int h)
 // For example, when the function updateGL is called, paintGL is called implicitly.
 void MyGL::paintGL()
 {
-    if (progressive_render && (is_rendering || something_rendered))
+    if (is_rendering || something_rendered)
     {
         glClear(GL_DEPTH_BUFFER_BIT);
         GLDrawProgressiveView();
@@ -404,9 +404,6 @@ void MyGL::RenderScene()
             case DIRECT_LIGHTING:
                 rt = new DirectLightingIntegrator(tileBounds, &scene, sampler->Clone(seed), recursionLimit);
                 break;
-            case INDIRECT_LIGHTING:
-                //TODO later
-                break;
             case FULL_LIGHTING:
                 rt = new FullLightingIntegrator(tileBounds, &scene, sampler->Clone(seed), recursionLimit);
                 break;
@@ -487,6 +484,9 @@ void MyGL::completeRender()
     is_rendering = false;
     something_rendered = true;
     render_event_timer.stop();
+
+    if (deNoise) scene.film.PostProcess();
+
     scene.film.WriteImage(output_filepath);
     completeSFX.play();
     emit sig_DisableGUI(false);
@@ -502,9 +502,9 @@ void MyGL::slot_SetRecursionLimit(int n)
     recursionLimit = n;
 }
 
-void MyGL::slot_SetProgressiveRender(bool b)
+void MyGL::slot_SetDeNoise(bool b)
 {
-    progressive_render = b;
+    deNoise = b;
 }
 
 void MyGL::slot_SetIntegratorType(int t)

@@ -25,6 +25,7 @@ public:
     float far_clip;  // Far clip plane distance
     float lensR;
     float focalD;
+    std::shared_ptr<Sampler> sampler;
 
     //Computed attributes
     float aspect;

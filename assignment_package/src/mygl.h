@@ -81,7 +81,7 @@ private:
     bool move_rubberband;
     QPoint rubberband_offset;
     QPoint origin;
-    bool progressive_render = true;
+    bool deNoise = true;
     bool something_rendered = false;
 
     QOpenGLShaderProgram prog_progressive;
@@ -102,7 +102,7 @@ protected:
 public slots:
     void slot_SetNumSamplesSqrt(int);
     void slot_SetRecursionLimit(int);
-    void slot_SetProgressiveRender(bool);
+    void slot_SetDeNoise(bool);
     void slot_SetIntegratorType(int);
     void slot_UseBVH(bool);
     void slot_SetMaxBVHPrims(int);
