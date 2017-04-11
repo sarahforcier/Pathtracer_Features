@@ -97,17 +97,18 @@ bool CSG::recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect)
         hit0 = recursiveIntersect(node->children[0], ray, &inter0);
         hit1 = recursiveIntersect(node->children[1], ray, &inter1);
         if (hit0 && hit1) {
-            hit = true;
-            if (inter1.tMax < inter0.t || (inter0.t > inter1.t && inter0.tMax < inter1.tMax))
-                *isect = inter1; // no overlap
-            else if (inter0.tMax < inter1.t || (inter1.t > inter0.t && inter1.tMax < inter0.tMax))
-                *isect = inter0; // no overlap
-            else if (inter0.t < inter1.t && inter0.tMax > inter1.t) {
-                *isect = inter1;
+            if (inter0.t > inter1.t && inter0.tMax < inter1.tMax) {
+                hit = true; *isect = inter0; // 0 inside 1
+            } else if (inter1.t > inter0.t && inter1.tMax < inter0.tMax) {
+                hit = true; *isect = inter1; // 1 inside 0
+                isect->objectHit = inter0.objectHit;
+            } else if (inter0.t < inter1.t && inter0.tMax > inter1.t) {
+                hit = true; *isect = inter1;
                 isect->objectHit = inter0.objectHit; // color
-            } else *isect = inter0;
+            } else if (inter1.t < inter0.t && inter1.tMax > inter0.t) {
+                hit = true; *isect = inter0;
+            }
         }
-
     }
     return hit;
 }

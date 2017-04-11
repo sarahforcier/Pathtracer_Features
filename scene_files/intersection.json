@@ -16,7 +16,7 @@
       		"shapes" : ["Sphere", "Cube"],
       		"name" : "constructiveGeoInter",
           "names" : ["sphere1", "cube1"],
-          "materials" : ["matteBlue", "matteWhite"],
+          "materials" : ["matteWhite", "matteWhite"],
       		"operators" : ["intersection", "shape", "shape"],
       		"transforms" : [
 	      		{
@@ -25,9 +25,9 @@
             		"scale" : [1,1,1]
 	      		},
 	      		{
-					"translate" : [0, 0, 0],
-            		"rotate" : [0, 0, 0],
-            		"scale" : [2,2,2]
+					"translate" : [-0.5, 0, -0.3],
+                "rotate" : [0, 20, 0],
+                "scale" : [2.5,2.5,2.5]
 	      		}
       		]
       	}
