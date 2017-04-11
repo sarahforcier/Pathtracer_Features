@@ -9,29 +9,10 @@
         "worldUp" : [0, 1, 0],
         "fov" : 19.5,
         "width" : 400,
-        "height": 400
+        "height": 400,
+        "focalDistance": 30,
+        "lensRadius": 4
       },
-      "csg" : [
-      	{
-      		"shapes" : ["Sphere", "Cube"],
-      		"name" : "constructiveGeoInter",
-          "names" : ["sphere1", "cube1"],
-          "materials" : ["matteBlue", "matteWhite"],
-      		"operators" : ["intersection", "shape", "shape"],
-      		"transforms" : [
-	      		{
-	      			"translate" : [1, 0, 0],
-            		"rotate" : [0, 0, 0],
-            		"scale" : [1,1,1]
-	      		},
-	      		{
-					"translate" : [0, 0, 0],
-            		"rotate" : [0, 0, 0],
-            		"scale" : [2,2,2]
-	      		}
-      		]
-      	}
-      ],
       "primitives" : [
         {
           "shape" : "SquarePlane",
@@ -82,17 +63,51 @@
             "rotate" : [90,0,0],
             "scale" : [10, 10, 1]
           }
+        },
+        {
+          "shape" : "Cube",
+          "name" : "Long Cube",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [2, 0, 3],
+            "rotate" : [0,27.5,0],
+            "scale" : [3, 6, 3]
+          }
+        },
+        {
+          "shape" : "Cube",
+          "name" : "short Cube",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [-2, -1, 0.75],
+            "rotate" : [0,-17.5,0],
+            "scale" : [3, 3, 3]
+          }
         }
       ],
       "lights" : [
         {
           "shape" : "SquarePlane",
-          "name" : "Light Source",
+          "name" : "Light Source Yellow",
           "type" : "DiffuseAreaLight",
           "lightColor" : [17,12,4],
-          "intensity" : 2,
+          "intensity" : 1,
           "transform" : {
-            "translate" : [0,7.45,0],
+            "translate" : [2,7.45,0],
+            "rotate" : [90,0,0],
+            "scale" : [3, 3, 1]
+          },
+          "isDelta" : false,
+          "twoSided" : true
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Light Source Blue",
+          "type" : "DiffuseAreaLight",
+          "lightColor" : [4,12,17],
+          "intensity" : 1,
+          "transform" : {
+            "translate" : [-2,7.45,0],
             "rotate" : [90,0,0],
             "scale" : [3, 3, 1]
           },
@@ -117,12 +132,6 @@
           "type" : "MatteMaterial",
           "name" : "matteGreen",
           "Kd" : [0.14, 0.45, 0.091],
-          "sigma": 0
-        },
-        {
-          "type" : "MatteMaterial",
-          "name" : "matteBlue",
-          "Kd" : [0.2, 0.1, 0.8],
           "sigma": 0
         }
       ]

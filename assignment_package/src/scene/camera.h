@@ -38,6 +38,7 @@ public:
              V,        //Represents the vertical component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
              H;        //Represents the horizontal component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
 
+    Matrix4x4 GetView() const;
     Matrix4x4 GetViewProj() const;
 
     void RecomputeAttributes();
@@ -45,6 +46,7 @@ public:
     Ray Raycast(const Point2f &pt) const;         //Creates a ray in 3D space given a 2D point on the screen, in screen coordinates.
     Ray Raycast(float x, float y) const;            //Same as above, but takes two floats rather than a vec2.
     Ray RaycastNDC(float ndc_x, float ndc_y) const; //Creates a ray in 3D space given a 2D point in normalized device coordinates.
+    Ray frustRaycast(float ndc_x, float ndc_y) const;
 
     void RotateAboutUp(float deg);
     void RotateAboutRight(float deg);

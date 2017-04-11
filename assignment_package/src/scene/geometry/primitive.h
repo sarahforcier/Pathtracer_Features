@@ -32,7 +32,7 @@ public:
     // BxDFs and store it in isect.
     bool ProduceBSDF(Intersection *isect) const;
 
-    Bounds3f WorldBound() const;
+    virtual Bounds3f WorldBound() const;
 
     QString name;//Mainly used for debugging purposes
     std::shared_ptr<Shape> shape;

@@ -1,5 +1,4 @@
 #include "camera.h"
-
 #include <la.h>
 
 Camera::Camera():
@@ -85,6 +84,11 @@ glm::mat4 Camera::GetViewProj() const
     return glm::perspective(glm::radians(fovy), width / (float)height, near_clip, far_clip) * glm::lookAt(eye, ref, up);
 }
 
+glm::mat4 Camera::GetView() const
+{
+    return glm::lookAt(eye, ref, up);
+}
+
 void Camera::RotateAboutUp(float deg)
 {
     deg = glm::radians(deg);
@@ -139,15 +143,22 @@ Ray Camera::Raycast(float x, float y) const
 Ray Camera::RaycastNDC(float ndc_x, float ndc_y) const
 {
     glm::vec3 P = ref + ndc_x*H + ndc_y*V;
-    Ray result(Vector3f(0.f), glm::normalize(P - eye));
+    Ray result(Vector3f(0.f),glm::normalize(P - eye));
     if (lensR > 0) {
-        float t = focalD / result.direction.z;
-        Point3f pFocus = t * result.direction;
-        Sampler sample = Sampler(100, 0);
+        float t = glm::abs(focalD / result.direction.z);
+        Point3f pFocus = result.origin + t * result.direction;
+        Sampler sample = Sampler(100, 7);
         result.origin = lensR * WarpFunctions::squareToDiskConcentric(sample.Get2D());
         result.direction = glm::normalize(pFocus - result.origin);
     }
     result.origin += eye;
+    return result;
+}
+
+Ray Camera::frustRaycast(float ndc_x, float ndc_y) const
+{
+    glm::vec3 P = ref + ndc_x*H + ndc_y*V;
+    Ray result(eye, glm::normalize(P - eye));
     return result;
 }
 
@@ -161,29 +172,29 @@ void Camera::create()
     pos.push_back(eye);
     //1 - 4: Near clip
         //Lower-left
-        Ray r = this->RaycastNDC(-1,-1);
+        Ray r = this->frustRaycast(-1,-1);
         pos.push_back(eye + r.direction * near_clip);
         //Lower-right
-        r = this->RaycastNDC(1,-1);
+        r = this->frustRaycast(1,-1);
         pos.push_back(eye + r.direction * near_clip);
         //Upper-right
-        r = this->RaycastNDC(1,1);
+        r = this->frustRaycast(1,1);
         pos.push_back(eye + r.direction * near_clip);
         //Upper-left
-        r = this->RaycastNDC(-1,1);
+        r = this->frustRaycast(-1,1);
         pos.push_back(eye + r.direction * near_clip);
     //5 - 8: Far clip
         //Lower-left
-        r = this->RaycastNDC(-1,-1);
+        r = this->frustRaycast(-1,-1);
         pos.push_back(eye + r.direction * far_clip);
         //Lower-right
-        r = this->RaycastNDC(1,-1);
+        r = this->frustRaycast(1,-1);
         pos.push_back(eye + r.direction * far_clip);
         //Upper-right
-        r = this->RaycastNDC(1,1);
+        r = this->frustRaycast(1,1);
         pos.push_back(eye + r.direction * far_clip);
         //Upper-left
-        r = this->RaycastNDC(-1,1);
+        r = this->frustRaycast(-1,1);
         pos.push_back(eye + r.direction * far_clip);
 
     for(int i = 0; i < 9; i++){

@@ -256,9 +256,7 @@ bool JSONReader::LoadCSG(QJsonObject &csgObj, QMap<QString, std::shared_ptr<Mate
         }
     }
 
-    std::shared_ptr<CSG> csg = std::make_shared<CSG>();
-    csg->primitives = prim_list;
-    csg->operators = operators;
+    std::shared_ptr<CSG> csg = std::make_shared<CSG>(prim_list, operators);
 
     if(csgObj.contains(QString("name"))) {
         csg->name = csgObj["name"].toString();
@@ -536,4 +534,3 @@ glm::vec3 JSONReader::ToVec3(const QStringRef &s)
     }
     return result;
 }
-

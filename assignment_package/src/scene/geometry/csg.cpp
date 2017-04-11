@@ -45,7 +45,8 @@ CSGNode* CSG::recursiveBuild(int* shape_num, int* oper_num) {
     return node;
 }
 
-CSG::CSG() {
+CSG::CSG(std::vector<std::shared_ptr<Primitive>> ps, std::vector<operation> ops)
+    : primitives(ps), operators(ops) {
     int shape_num = 0;
     int oper_num = 0;
     root = recursiveBuild(&shape_num, &oper_num);
@@ -67,24 +68,29 @@ bool CSG::recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect)
         hit1 = recursiveIntersect(node->children[1], ray, &inter1);
         if (hit0 || hit1) {
             hit = true;
-            if (inter0.t < inter1.t) {
-                *isect = inter0;
-            } else if (inter1.t < inter0.t) {
-                *isect = inter1;
-            }
+            if (!hit0) *isect = inter1;
+            else if (!hit1) *isect = inter0;
+            else if (inter0.t < inter1.t) *isect = inter0;
+            else *isect = inter1;
         }
         break;
     case DIFFER:
         hit0 = recursiveIntersect(node->children[0], ray, &inter0);
         hit1 = recursiveIntersect(node->children[1], ray, &inter1);
         if (hit0 && hit1) {
-            hit = true;
-            if (inter0.t < inter1.t) {
+            if (inter0.t < inter1.t || inter1.tMax < inter0.t ) {
+                hit = true;
                 *isect = inter0;
-            } else if (inter1.tMax < inter0.tMax) {
+            }
+            else if (inter1.tMax < inter0.tMax) {
+                hit = true;
                 *isect = inter1;
                 isect->objectHit = inter0.objectHit; // color
             }
+        }
+        if (hit0 && !hit1) {
+            hit = true;
+            *isect = inter0;
         }
         break;
     case INTER:
@@ -92,13 +98,16 @@ bool CSG::recursiveIntersect(CSGNode* node, const Ray &ray, Intersection *isect)
         hit1 = recursiveIntersect(node->children[1], ray, &inter1);
         if (hit0 && hit1) {
             hit = true;
-            if (inter0.t < inter1.t && inter0.tMax > inter1.t) {
+            if (inter1.tMax < inter0.t || (inter0.t > inter1.t && inter0.tMax < inter1.tMax))
+                *isect = inter1; // no overlap
+            else if (inter0.tMax < inter1.t || (inter1.t > inter0.t && inter1.tMax < inter0.tMax))
+                *isect = inter0; // no overlap
+            else if (inter0.t < inter1.t && inter0.tMax > inter1.t) {
                 *isect = inter1;
                 isect->objectHit = inter0.objectHit; // color
-            } else if (inter1.t < inter0.t && inter1.tMax > inter0.t) {
-                *isect = inter0;
-            }
+            } else *isect = inter0;
         }
+
     }
     return hit;
 }

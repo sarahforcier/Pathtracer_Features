@@ -162,10 +162,3 @@ inline void CoordinateSystem(const Vector3f& v1, Vector3f* v2, Vector3f* v3)
             *v2 = Vector3f(0, v1.z, -v1.y) / std::sqrt(v1.y * v1.y + v1.z * v1.z);
         *v3 = glm::cross(v1, *v2);
 }
-
-inline Vector3f SphericalDirection(float sinTheta, float cosTheta, float phi,
-                                   const Vector3f &x, const Vector3f &y, const Vector3f &z) {
-    return sinTheta * std::cos(phi) * x +
-           sinTheta * std::sin(phi) * y +
-           cosTheta * z;
-}

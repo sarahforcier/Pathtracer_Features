@@ -9,15 +9,15 @@
         "worldUp" : [0, 1, 0],
         "fov" : 19.5,
         "width" : 400,
-        "height": 200,
-        "focalDistance": 3,
+        "height": 200, 
+        "focalDistance": 20,
         "lensRadius": 0.5
       },
       "primitives" : [
         {
           "shape" : "SquarePlane",
           "name" : "Floor",
-          "material" : "matteBlue",
+          "material" : "matteWhite",
           "transform" : {
             "translate" : [0, 1, 0],
             "rotate" : [-90, 0, 0],
@@ -29,9 +29,9 @@
           "name" : "Left wall",
           "material" : "matteBlue",
           "transform" : {
-            "translate" : [5.5,2.5,0],
+            "translate" : [5.5,5,0],
             "rotate" : [0, -90, 0],
-            "scale" : [10, 5, 1]
+            "scale" : [10, 10, 1]
           }
         },
         {
@@ -39,9 +39,9 @@
           "name" : "Right Wall",
           "material" : "matteBlue",
           "transform" : {
-            "translate" : [-5.5, 2.5, 0],
+            "translate" : [-5.5, 5, 0],
             "rotate" : [0,90,0],
-            "scale" : [10, 5, 1]
+            "scale" : [10, 10, 1]
           }
         },
         {
@@ -49,9 +49,9 @@
           "name" : "Back Wall",
           "material" : "matteBlue",
           "transform" : {
-            "translate" : [0,2.5,5],
+            "translate" : [0,5,5],
             "rotate" : [0,180,0],
-            "scale" : [11, 5, 1]
+            "scale" : [11, 10, 1]
           }
         },
         {
@@ -59,7 +59,7 @@
           "name" : "Ceiling",
           "material" : "matteBlue",
           "transform" : {
-            "translate" : [0, 5, 0],
+            "translate" : [0, 7.5, 0],
             "rotate" : [90,0,0],
             "scale" : [11, 10, 1]
           }
@@ -138,12 +138,26 @@
       "lights" : [
         {
           "shape" : "SquarePlane",
-          "name" : "Light Source",
+          "name" : "Light Source Yellow",
           "type" : "DiffuseAreaLight",
           "lightColor" : [17,12,10],
-          "intensity" : 1.5,
+          "intensity" : 0.8,
           "transform" : {
-            "translate" : [0,4.9,0],
+            "translate" : [2,7.45,0],
+            "rotate" : [90,0,0],
+            "scale" : [3, 3, 1]
+          },
+          "isDelta" : false,
+          "twoSided" : true
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Light Source Blue",
+          "type" : "DiffuseAreaLight",
+          "lightColor" : [17,12,10],
+          "intensity" : 0.8,
+          "transform" : {
+            "translate" : [-2,7.45,0],
             "rotate" : [90,0,0],
             "scale" : [3, 3, 1]
           },
@@ -157,6 +171,13 @@
           "name" : "matteBlue",
             "Kd" : [0.019, 0.45, 0.78],
           "sigma": 0
+        },
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteWhite",
+            "Kd" : [0.85, 0.81, 0.78],
+          "sigma": 0,
+          "textureMap": "tex_nor_maps/wahoo.bmp"
         },
         {
           "type" : "MatteMaterial",

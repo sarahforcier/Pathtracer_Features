@@ -222,8 +222,8 @@ int BVHAccel::flattenBVHTree(BVHBuildNode *node, int *offset) {
 bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
 {
     //TODO
-    float hit = false;
-    if (root->nPrimitives == 0) return hit;
+    if (root->nPrimitives == 0) return false;
+    bool hit = false;
     Intersection inter;
     Vector3f invDir(1.f/ray.direction.x, 1.f/ray.direction.y, 1.f/ray.direction.z);
     int dirIsNeg[3] = {invDir.x < 0.f, invDir.y < 0.f, invDir.z < 0.f};
@@ -239,8 +239,8 @@ bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
             if (node->child == 'n') {
                 for (int i = 0; i < node->nPrimitives; i++) {
                     if (primitives[node->primitivesOffset + i]->Intersect(ray, &inter)) {
+                        hit = true;
                         if (inter.t < t) {
-                            hit = inter.tMax;
                             t = inter.t;
                             *isect = inter;
                         }
