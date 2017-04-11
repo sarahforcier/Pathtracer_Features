@@ -58,6 +58,8 @@ private:
 
     bool makeBVH;
     int maxBVHPrims;
+    bool deNoise = true;
+    int buckets_deNoise = 360;
 
 public:
     explicit MyGL(QWidget *parent = 0);
@@ -81,7 +83,7 @@ private:
     bool move_rubberband;
     QPoint rubberband_offset;
     QPoint origin;
-    bool deNoise = true;
+
     bool something_rendered = false;
 
     QOpenGLShaderProgram prog_progressive;
@@ -103,6 +105,7 @@ public slots:
     void slot_SetNumSamplesSqrt(int);
     void slot_SetRecursionLimit(int);
     void slot_SetDeNoise(bool);
+    void slot_SetBuckDeNoise(int);
     void slot_SetIntegratorType(int);
     void slot_UseBVH(bool);
     void slot_SetMaxBVHPrims(int);

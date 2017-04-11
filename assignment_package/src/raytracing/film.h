@@ -1,10 +1,11 @@
 #pragma once
 #include <globals.h>
-#include "filter.h"
+#include "kmeansfilter.h"
 
 class Film{
 public:
     Film() : Film(400, 400){}
+    ~Film() {}
     Film(unsigned int width, unsigned int height) : bounds(Point2i(0.f, 0.f), Point2i(width, height))
     {
         SetDimensions(width, height);
@@ -18,10 +19,10 @@ public:
     void WriteImage(QString path);
     bool IsPixelColorSet(const Point2i& pixel);
     void cleanPixels();
-    void PostProcess();
+    void PostProcess(int num_buckets);
 
     Bounds2i bounds;
-    Filter *filter;
+    std::shared_ptr<K_MeansFilter> filter;
 
 private:
     std::vector<std::vector<Color3f>> pixels;//A 2D array of pixels in which we can store colors

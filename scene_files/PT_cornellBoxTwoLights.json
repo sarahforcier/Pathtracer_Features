@@ -9,9 +9,7 @@
         "worldUp" : [0, 1, 0],
         "fov" : 19.5,
         "width" : 400,
-        "height": 400,
-        "focalDistance": 30,
-        "lensRadius": 2.0
+        "height": 400
       },
       "primitives" : [
         {

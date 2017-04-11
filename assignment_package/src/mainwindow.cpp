@@ -49,4 +49,5 @@ void MainWindow::slot_DisableGUI(bool b)
     ui->checkBox_DeNoise->setEnabled(!b);
     ui->checkBox_BVH->setEnabled(!b);
     ui->spinBox_maxPrims->setEnabled(!b);
+    ui->spinBox_deNoise->setEnabled(!b);
 }

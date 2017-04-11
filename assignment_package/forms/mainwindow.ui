@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>655</width>
-    <height>610</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,26 +66,13 @@
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0" colspan="2">
-           <widget class="QLabel" name="label">
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Square root of pixel samples count:</string>
+             <string>Integrator type:</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QSpinBox" name="samplesSpinBox">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>10</number>
             </property>
            </widget>
           </item>
@@ -99,33 +86,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
-           <widget class="QSpinBox" name="recursionSpinBox">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>5</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QCheckBox" name="checkBox_DeNoise">
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>De-Noise</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Integrator type:</string>
+             <string>Square root of pixel samples count:</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -158,11 +122,44 @@
           </item>
           <item row="1" column="5">
            <widget class="QCheckBox" name="checkBox_BVH">
+            <property name="mouseTracking">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Make BVH</string>
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QCheckBox" name="checkBox_DeNoise">
+            <property name="text">
+             <string>De-Noise</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QSpinBox" name="samplesSpinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Max primitives in node:</string>
             </property>
            </widget>
           </item>
@@ -176,15 +173,46 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLabel" name="label_4">
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="recursionSpinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="QSpinBox" name="spinBox_deNoise">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>360</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Max primitives in node:</string>
+             <string>Number of K-Means Clusters:</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
+        <zorder>layoutWidget</zorder>
+        <zorder>mygl</zorder>
        </widget>
       </item>
      </layout>

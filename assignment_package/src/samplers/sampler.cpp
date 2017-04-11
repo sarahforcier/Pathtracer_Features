@@ -14,6 +14,11 @@ Point2f Sampler::Get2D()
     return Point2f(rng.nextFloat(), rng.nextFloat());
 }
 
+Point3f Sampler::Get3D()
+{
+    return Point3f(rng.nextFloat(), rng.nextFloat(), rng.nextFloat());
+}
+
 std::unique_ptr<Sampler> Sampler::Clone(int seed)
 {
     Sampler* s = new Sampler(samplesPerPixel, seed);

@@ -318,20 +318,17 @@ void MyGL::SceneLoadDialog()
     something_rendered = false;
 
     QString filepath = QFileDialog::getOpenFileName(0, QString("Load Scene"), QString("../scene_files"), tr("*.json"));
-    if(filepath.length() == 0)
-    {
-        return;
-    }
+    if(filepath.length() == 0) return;
 
     QFile file(filepath);
     int i = filepath.length() - 1;
-    while(QString::compare(filepath.at(i), QChar('/')) != 0)
-    {
-        i--;
-    }
+    while(QString::compare(filepath.at(i), QChar('/')) != 0) i--;
+
     QStringRef local_path = filepath.leftRef(i+1);
     //Reset all of our objects
     scene.Clear();
+    scene.clearBVH();
+
     //Load new objects based on the JSON file chosen.
 
     json_reader.LoadSceneFromFile(file, local_path, scene);
@@ -485,9 +482,11 @@ void MyGL::completeRender()
     something_rendered = true;
     render_event_timer.stop();
 
-    if (deNoise) scene.film.PostProcess();
-
     scene.film.WriteImage(output_filepath);
+
+    if (deNoise) scene.film.PostProcess(buckets_deNoise);
+
+    scene.film.WriteImage(output_filepath.append(QString("_post")));
     completeSFX.play();
     emit sig_DisableGUI(false);
 }
@@ -505,6 +504,11 @@ void MyGL::slot_SetRecursionLimit(int n)
 void MyGL::slot_SetDeNoise(bool b)
 {
     deNoise = b;
+}
+
+void MyGL::slot_SetBuckDeNoise(int b)
+{
+    buckets_deNoise = b;
 }
 
 void MyGL::slot_SetIntegratorType(int t)
