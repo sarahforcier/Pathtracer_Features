@@ -7,18 +7,30 @@ struct Bucket {
     Color3f GetAvg() {return total_color/num;}
 };
 
-K_MeansFilter::K_MeansFilter(std::vector<std::vector<Color3f>> p_colors, int num)
-    : num_buckets(num) {
-    buckets = std::vector<std::shared_ptr<Bucket>>(num_buckets);
-    for (int i = 0; i < num_buckets; i++) buckets[i] = std::make_shared<Bucket>();
+K_MeansFilter::K_MeansFilter(std::vector<std::vector<Color3f>> p_colors,
+                             std::vector<std::vector<bool>> has_color, int num)
+    : sqrt_buckets(glm::sqrt(num)) {
 
+    buckets = std::vector<std::vector<std::shared_ptr<Bucket>>>(sqrt_buckets);
+    // initialize buckets
+    for (int i = 0; i < sqrt_buckets; i++) {
+        buckets[i] = std::vector<std::shared_ptr<Bucket>>(sqrt_buckets);
+        for (int j = 0; j < sqrt_buckets; j++) {
+            buckets[i][j] = std::make_shared<Bucket>();
+        }
+    }
+
+    // populate buckets
     for (int i = 0; i < p_colors.size(); i++) {
         for (int j = 0; j < p_colors[i].size(); j++) {
-            if (true) {
-                float hue = GetHue(p_colors[i][j]);
-                int index = hue * 360.f / num_buckets;
-                buckets[index]->num++;
-                buckets[index]->total_color += p_colors[i][j];
+            if (has_color[i][j]) {
+                Vector2f hueSat = GetHueSat(p_colors[i][j]);
+                int i_x = hueSat.x * sqrt_buckets / 360.f;
+                if (i_x == sqrt_buckets) i_x --;
+                int i_y = hueSat.y * sqrt_buckets;
+                if (i_y == sqrt_buckets) i_y --;
+                buckets[i_x][i_y]->num++;
+                buckets[i_x][i_y]->total_color += p_colors[i][j];
             }
 
         }
@@ -26,7 +38,10 @@ K_MeansFilter::K_MeansFilter(std::vector<std::vector<Color3f>> p_colors, int num
 }
 
 Color3f K_MeansFilter::Evaluate(Color3f c) {
-    float hue = GetHue(c);
-    int index = (int) hue * 360 / num_buckets;
-    return buckets[index]->GetAvg();
+    Vector2f hueSat = GetHueSat(c);
+    int i_x = (int) hueSat.x * sqrt_buckets / 360.f;
+    if (i_x == sqrt_buckets) i_x --;
+    int i_y = (int) hueSat.y * sqrt_buckets;
+    if (i_y == sqrt_buckets) i_y --;
+    return buckets[i_x][i_y]->GetAvg();
 }

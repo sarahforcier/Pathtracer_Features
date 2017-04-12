@@ -3,7 +3,7 @@
 #include <QColor>
 
 void Film::PostProcess(int num_buckets) {
-    filter = std::make_shared<K_MeansFilter>(pixels, num_buckets);
+    filter = std::make_shared<K_MeansFilter>(pixels, pixel_has_color, num_buckets);
     for (int i = 0; i < bounds.Max().x; i++) {
         for (int j = 0; j < bounds.Max().y; j++) {
             pixels[i][j] = filter->Evaluate(pixels[i][j]);
