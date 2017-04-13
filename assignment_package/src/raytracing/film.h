@@ -9,22 +9,28 @@ public:
     Film(unsigned int width, unsigned int height) : bounds(Point2i(0.f, 0.f), Point2i(width, height))
     {
         SetDimensions(width, height);
-        filter = nullptr;
+        //filter = nullptr;
     }
 
     void SetDimensions(unsigned int w, unsigned int h);
     void SetPixelColor(const Point2i& pixel, const Color3f pixelColor);
+    void SetSigma_Sp(const Point2i& pixel, const Color3f stdev);
     Color3f GetColor(const Point2i& pixel);
     void WriteImage(const std::string &path);
     void WriteImage(QString path);
     bool IsPixelColorSet(const Point2i& pixel);
     void cleanPixels();
-    void PostProcess(int num_buckets);
+    Color3f SetNoiseMap(std::vector<std::vector<Color3f>> sigma_wp);
+    Color3f CalculateMedian(std::vector<std::vector<Color3f>> sigma_wp);
+    void PostProcess();
 
     Bounds2i bounds;
-    std::shared_ptr<K_MeansFilter> filter;
+    //std::shared_ptr<K_MeansFilter> filter;
 
 private:
     std::vector<std::vector<Color3f>> pixels;//A 2D array of pixels in which we can store colors
+    std::vector<std::vector<Color3f>> noiseMap; // A 2D array of noise standard deviation for every pixel color
     std::vector<std::vector<bool>> pixel_has_color;// A 2D array to indicate if there is something rendered on the pixel
+
+    std::vector<std::vector<Color3f>> sigma_sp;
 };

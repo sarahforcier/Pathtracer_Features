@@ -2,14 +2,14 @@
   "frames" :[
     {
     "frameNumber" : 0,
+        "fov" : 19.5,
+        "width" : 400,
+        "height": 200, 
     "scene" : {
       "camera" : {
         "target" : [0, 2.5, 0],
         "eye" : [0, 5.5, -30],
         "worldUp" : [0, 1, 0],
-        "fov" : 19.5,
-        "width" : 400,
-        "height": 200, 
         "focalDistance": 20,
         "lensRadius": 0.5
       },

@@ -484,7 +484,7 @@ void MyGL::completeRender()
 
     scene.film.WriteImage(output_filepath);
 
-    if (deNoise) scene.film.PostProcess(buckets_deNoise);
+    if (deNoise) scene.film.PostProcess();
 
     scene.film.WriteImage(output_filepath.append(QString("_post")));
     completeSFX.play();

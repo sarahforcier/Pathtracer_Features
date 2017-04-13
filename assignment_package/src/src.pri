@@ -56,8 +56,8 @@ SOURCES += \
     $$PWD/scene/bounds.cpp \
     $$PWD/scene/bvh.cpp \
     $$PWD/scene/geometry/csg.cpp \
-    $$PWD/raytracing/mitchellfilter.cpp \
-    $$PWD/raytracing/kmeansfilter.cpp
+    $$PWD/raytracing/kmeansfilter.cpp \
+    $$PWD/raytracing/denoise.cpp
 
 HEADERS += \
     $$PWD/mainwindow.h \
@@ -115,6 +115,5 @@ HEADERS += \
     $$PWD/scene/bounds.h \
     $$PWD/scene/bvh.h \
     $$PWD/scene/geometry/csg.h \
-    $$PWD/raytracing/filter.h \
-    $$PWD/raytracing/mitchellfilter.h \
-    $$PWD/raytracing/kmeansfilter.h
+    $$PWD/raytracing/kmeansfilter.h \
+    $$PWD/raytracing/denoise.h

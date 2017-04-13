@@ -162,3 +162,12 @@ inline void CoordinateSystem(const Vector3f& v1, Vector3f* v2, Vector3f* v3)
             *v2 = Vector3f(0, v1.z, -v1.y) / std::sqrt(v1.y * v1.y + v1.z * v1.z);
         *v3 = glm::cross(v1, *v2);
 }
+
+inline Color3f GetStdDev(std::vector<Color3f> colors, Color3f mean) {
+    int size = colors.size();
+    Color3f stdDev = Color3f(0.f);
+    for (int i = 0; i < size; i++) {
+        stdDev += glm::pow(colors[i] - mean, Vector3f(2.f));
+    }
+    return glm::sqrt(stdDev/(float)size);
+}

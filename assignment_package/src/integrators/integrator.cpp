@@ -19,6 +19,8 @@ void Integrator::Render()
 //            std::cout << "";
 //        }
         Color3f pixelColor(0.f);
+        Color3f sigma_sp; // pixel stdev
+        std::vector<Color3f> colors;
         // Ask our sampler for a collection of stratified samples, then raycast through each sample
         std::vector<Point2f> pixelSamples = sampler->GenerateStratifiedSamples();
         for(Point2f sample : pixelSamples)
@@ -30,11 +32,16 @@ void Integrator::Render()
             // Li is implemented by Integrator subclasses, like DirectLightingIntegrator
             Color3f L = Li(ray, *scene, sampler, recursionLimit);
             // Accumulate color in the pixel
+            colors.push_back(L);
             pixelColor += L;
         }
         // Average all samples' energies
         pixelColor /= pixelSamples.size();
         film->SetPixelColor(pixel, glm::clamp(pixelColor, 0.f, 1.f));
+
+        // calculate pixel std
+        sigma_sp = GetStdDev(colors, pixelColor);
+        film->SetSigma_Sp(pixel, sigma_sp);
     }
     //We're done here! All pixels have been given an averaged color.
 }
@@ -46,3 +53,5 @@ void Integrator::ClampBounds()
     max = Point2i(std::min(max.x, film->bounds.Max().x), std::min(max.y, film->bounds.Max().y));
     bounds = Bounds2i(bounds.Min(), max);
 }
+
+
