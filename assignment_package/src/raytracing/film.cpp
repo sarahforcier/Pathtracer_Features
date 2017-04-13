@@ -20,9 +20,11 @@ void Film::SetDimensions(unsigned int w, unsigned int h)
     pixels.clear();
     pixels = std::vector<std::vector<Color3f>>(w);
     noiseMap = std::vector<std::vector<Color3f>>(w);
+    sigma_sp = std::vector<std::vector<Color3f>>(w);
     for(unsigned int i = 0; i < w; i++){
         pixels[i] = std::vector<Color3f>(h);
         noiseMap[i] = std::vector<Color3f>(h);
+        sigma_sp[i] = std::vector<Color3f>(h);
     }
     pixel_has_color = std::vector<std::vector<bool>>(w, std::vector<bool>(h, false));
 }
@@ -64,6 +66,7 @@ Color3f Film::SetNoiseMap(std::vector<std::vector<Color3f>> sigma_wp) {
 }
 
 // return max wp
+// should be taking median of wavelet domain D01
 Color3f Film::CalculateMedian(std::vector<std::vector<Color3f>> sigma_wp) {
     sigma_wp = std::vector<std::vector<Color3f>>(bounds.Max().x);
     Color3f max = Color3f(0.f);
