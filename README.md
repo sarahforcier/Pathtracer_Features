@@ -19,7 +19,7 @@ Constructive Solid Geometry
 ![](./csg_difference.png)
 
 ### Union
-![](./union.png)
+![](./csg_union.png)
 
 De Noising
 -----------
