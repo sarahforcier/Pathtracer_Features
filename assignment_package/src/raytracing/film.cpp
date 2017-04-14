@@ -3,8 +3,7 @@
 #include <QColor>
 
 void Film::PostProcess() {
-    filter = std::make_shared<DeNoise>(pixels, sigma_sp,
-                bounds.Max().x, bounds.Max().y, max_sigma_sp);
+    denoise = std::make_shared<DeNoise>(pixels, sigma_sp, bounds.Max());
 }
 
 void Film::SetDimensions(unsigned int w, unsigned int h)

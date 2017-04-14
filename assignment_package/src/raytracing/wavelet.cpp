@@ -43,9 +43,9 @@ float MedAbsDev(vector<vector<float>> img, vector<float> filter) // img 8x8, dia
 void HighPass(vector<float> &a, vector<float> &b, vector<float> &cx) {
     unsigned int sz = a.size() + b.size() - 1;
 
-    vector<Complex> inp_data = vector<Complex>(sx);
-    vector<Complex> temp_data = vector<Complex>(sx);
-    vector<Complex> filt_data = vector<Complex>(sx);
+    vector<Complex> inp_data = vector<Complex>(sz);
+    vector<Complex> temp_data = vector<Complex>(sz);
+    vector<Complex> filt_data = vector<Complex>(sz);
 
     for (unsigned int i =0; i < sz; i++) {
         if (i < a.size()) inp_data[i].r = a[i];
