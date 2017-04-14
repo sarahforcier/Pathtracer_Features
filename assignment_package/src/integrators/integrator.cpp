@@ -10,6 +10,7 @@ void Integrator::Render()
     // Compute the bounds of our sample, clamping to screen's max bounds if necessary
     // Instantiate a FilmTile to store this thread's pixel colors
     std::vector<Point2i> tilePixels = bounds.GetPoints();
+
     // For every pixel in the FilmTile:
     for(Point2i pixel : tilePixels)
     {
@@ -19,7 +20,6 @@ void Integrator::Render()
 //            std::cout << "";
 //        }
         Color3f pixelColor(0.f);
-        Color3f sigma_sp; // pixel stdev
         std::vector<Color3f> colors;
         // Ask our sampler for a collection of stratified samples, then raycast through each sample
         std::vector<Point2f> pixelSamples = sampler->GenerateStratifiedSamples();
@@ -39,13 +39,10 @@ void Integrator::Render()
         pixelColor /= pixelSamples.size();
         film->SetPixelColor(pixel, glm::clamp(pixelColor, 0.f, 1.f));
 
-        // calculate pixel std
-        sigma_sp = GetStdDev(colors, pixelColor);
-        film->SetSigma_Sp(pixel, sigma_sp);
+        // calculate pixel stdev
+        film->SetSigma_Sp(pixel, GetStdDev(colors, pixelColor));
     }
-    //We're done here! All pixels have been given an averaged color.
 }
-
 
 void Integrator::ClampBounds()
 {

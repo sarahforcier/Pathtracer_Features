@@ -1,33 +1,42 @@
 #pragma once
 #include <globals.h>
+#include "bm3d.h"
+#include "wavelet.h"
 
+using namespace std;
 
 class DeNoise
 {
 public:
-    DeNoise(std::vector<std::vector<Color3f>> img, int w, int h, Color3f maxS) : image(img), w(w), h(h), maxS(maxS) {}
-    void ComputeCDF(std::vector<std::vector<Color3f>> img, int b);
-    void ComputeLevels(std::vector<std::vector<Color3f>> noiseMap, int L, std::vector<std::vector<float>> out);
+    DeNoise(vector<vector<Color3f>> img, vector<vector<Color3f>> sigma_sp, int w, int h);
 
-    void DeNoiseLevels(std::vector<std::vector<Color3f>> img, std::vector<Color3f> sigma,
-                  std::vector<std::vector<std::vector<Color3f>>> out);
+    CalculateMedian(vector<vector<Color3f>> sigma_wp);
 
-    void CombineLayers(std::vector<std::vector<std::vector<float>>> levelR,
-                       std::vector<std::vector<std::vector<float>>> levelG,
-                       std::vector<std::vector<std::vector<float>>> levelB,
-                  std::vector<std::vector<Color3f>> noiseMap, std::vector<std::vector<float>> sigmas);
+    Color3f SetNoiseMap(vector<vector<Color3f>> sigma_wp);
 
-    void RemoveSpikes();
+    void ComputeCDF(Color3f max, vector<map<int, float>> out); // map: int = CDF, float = sigma
+    void ComputeLevels(vector<map<int, float>> in, vector<vector<float>> out);
+
+    void DeNoiseLevels(vector<vector<float>> img_noisy,
+                       vector<vector<float>> sigmas,
+                       vector<vector<vector<float>>> out);
+
+    // write to image
+    void CombineLayers(vector<vector<float>> levels,
+                       vector<float> sigmas,
+                       vector<vector<float>> out);
+
+    void RemoveSpikes(vector<vector<float>> in);
+    vector<vector<Color3f>> denoised_image;
+
 
 private:
-    std::vector<std::vector<Color3f>> image;
-    std::map<int, float> invNoiseCDF_R;
-    std::map<int, float> invNoiseCDF_G;
-    std::map<int, float> invNoiseCDF_B;
-    Color3f maxS; // maximum stdev
-    int w, h;
+    vector<vector<Color3f>> noisy_image; // original image
+    vector<vector<float>> noiseMap; // A 1D array of normalized standard deviation
+
+    Color3f L;
+    int w, h, buckets, win_size;
+    float g;
+
+    vector<float> filter;
 };
-
-static inline void Histogram(std::vector<std::vector<Color3f>> img, int b, std::vector<std::vector<float>> out) {
-
-}
