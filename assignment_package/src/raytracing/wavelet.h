@@ -1,9 +1,10 @@
 #pragma once
 #include <globals.h>
+#include "filt.h"
 
 using namespace std;
 
-Color3f MedAbsDev(vector<vector<Color3f>> img, Bounds2i bound);
+Color3f MedAbsDev(vector<vector<Color3f>> img, int w, int h, Point2i pixel);
 void HighPass(vector<Color3f> &a,vector<Color3f> &cx);
 
 static inline void rowToCol(vector<vector<Color3f>> in, vector<vector<Color3f>> &out)

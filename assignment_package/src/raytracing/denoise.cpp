@@ -7,23 +7,26 @@ DeNoise::DeNoise(vector<vector<Color3f> > img,
     filter = vector<float> {-0.48296291314469025, 0.83651630373746899, -0.22414386804185735, -0.12940952255092145};
     Color3f max = SetNoiseMap(sigma_sp);
 
-    vector<map<int, float>> cdf_map;
-    ComputeCDF(max, cdf_map);
+//    vector<map<int, float>> cdf_map;
+//    ComputeCDF(max, cdf_map);
 
-    vector<vector<float>> sigmas;
-    vector<vector<vector<vector<float>>>> levels;
-    ComputeLevels(cdf_map, sigmas, levels);
+//    vector<vector<float>> sigmas;
+//    vector<vector<vector<vector<float>>>> levels;
+//    ComputeLevels(cdf_map, sigmas, levels);
 
-    CombineLayers(sigmas, levels); // write to final
+//    CombineLayers(sigmas, levels); // write to final
 
-    RemoveSpikes(); // write to final
+//    RemoveSpikes(); // write to final
 }
 
 // return max value
 Color3f DeNoise::SetNoiseMap(vector<vector<Color3f>> sigma_sp)
 {
     vector<vector<Color3f>> sigma_wp;
-    Color3f max_wp = CalculateMedian(sigma_wp); // all zero :(
+    Color3f max_wp = CalculateMedian(sigma_wp);
+
+    // DEBUG
+    denoised_image = sigma_wp; // only blurred one way?? down
 
     Color3f max = Color3f(0.f);
     for (int a = 0; a < w; a++) {
@@ -44,7 +47,7 @@ Color3f DeNoise::SetNoiseMap(vector<vector<Color3f>> sigma_sp)
             row.push_back(color);
             max = glm::max(color, max);
         }
-        noiseMap.push_back(row);
+        noiseMap.push_back(row); // too many zeros :(
     }
 
     L = glm::ceil(max_wp/ 10.f);
@@ -56,6 +59,8 @@ Color3f DeNoise::SetNoiseMap(vector<vector<Color3f>> sigma_sp)
             noiseMap[i][j] *= g * max_wp;
         }
     }
+    denoised_image = noiseMap;
+
     return max;
 }
 
@@ -67,11 +72,7 @@ Color3f DeNoise::CalculateMedian(vector<vector<Color3f>> &sigma_wp)
         vector<Color3f> row;
         for (int j = 0; j < h; j ++) {
 
-            Point2i start = Point2i(glm::max(0, i - win_size/2), glm::max(0, j - win_size/2));
-            Point2i end = Point2i(glm::min(i + win_size/2, w - 1), glm::min(j + win_size/2, h - 1));
-            Bounds2i square = Bounds2i(start, end);
-
-            Color3f color = MedAbsDev(noisy_image, square); max = glm::max(color, max);
+            Color3f color = MedAbsDev(noisy_image, w , h, Point2i(i,j)); max = glm::max(color, max);
             row.push_back(color);
         }
         sigma_wp.push_back(row);
@@ -80,9 +81,8 @@ Color3f DeNoise::CalculateMedian(vector<vector<Color3f>> &sigma_wp)
 }
 
 // CDF per color
-void DeNoise::ComputeCDF(Color3f max, vector<map<int, float>> &out)
+void DeNoise::ComputeCDF(Color3f max, vector<map<int, float>> &cdf_map)
 {
-    vector<map<int, float>> cdf_map = vector<map<int, float>>(3);
     for (int c = 0; c < 3; c++) { // per color
         vector<int> hist = vector<int> (buckets);
         map<int, float> cmap;

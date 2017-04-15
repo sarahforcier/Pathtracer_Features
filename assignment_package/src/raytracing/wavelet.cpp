@@ -7,20 +7,20 @@ struct Complex {
     float i;
 };
 
-vector<float> kernel = vector<float> {-0.5f, -0.5f, 2.f, -0.5f, -0.5f};
+vector<float> kernel = vector<float> {-1.f, -1.f, 9.f, -1.f, -1.f};
 
 bool sortR(Color3f i, Color3f j) { return i.r < j.r; }
 bool sortG(Color3f i, Color3f j) { return i.g < j.g; }
 bool sortB(Color3f i, Color3f j) { return i.b < j.b; }
 
-Color3f MedAbsDev(vector<vector<Color3f>> img, Bounds2i bound)
+Color3f MedAbsDev(vector<vector<Color3f>> img, int w, int h, Point2i pixel)
 {
-    Point2i start = bound.Min();
-    Point2i end = bound.Max();
-
     // row filter and downsample
     vector<vector<Color3f>> rowFiltered; // 4x8
-    for (int i = start.x; i <= end.x; i = i + 2) {
+    int i = 0;
+    if (pixel.x %2 != 0) i = 1;
+    pixel.x /= 2;
+    for (i; i < w; i = i + 2) {
         vector<Color3f> cx;
         HighPass(img[i], cx);
         rowFiltered.push_back(cx);
@@ -29,17 +29,27 @@ Color3f MedAbsDev(vector<vector<Color3f>> img, Bounds2i bound)
     // column filter
     vector<vector<Color3f>> byCol;
     rowToCol(rowFiltered, byCol);
-    vector<Color3f> arr;
-    for (int i = start.y; i <= end.y; i = i + 2) {
+    vector<vector<Color3f>> colFiltered; // 4x8
+    i = 0;
+    if (pixel.y %2 != 0) i = 1;
+    pixel.y /= 2;
+    for (int i = 0; i < h; i = i + 2) {
         vector<Color3f> cx;
         HighPass(byCol[i], cx);
-        for (int j = 0; j < cx.size(); j ++)
-            arr.push_back(cx[j]);
+        colFiltered.push_back(cx);
+    }
+    Point2i dim = Point2i(colFiltered.size(), colFiltered[0].size());
+    vector<Color3f> arr;
+    Point2i start = Point2i(glm::max(0, pixel.x - 2), glm::max(0, pixel.y - 2));
+    Point2i end = Point2i(glm::min(pixel.x + 2, dim.x - 1), glm::min(pixel.y + 2, dim.y - 1));
+    for (int i = start.x; i <= end.x; i ++) {
+        for (int j = start.y; j <= end.y; j++) {
+            arr.push_back(colFiltered[i][j]);
+        }
     }
 
-    // calculate median
-    sort(arr.begin(), arr.end(), sortR); float r = arr[2].r;
-    sort(arr.begin(), arr.end(), sortR); float g = arr[2].g;
+    sort(arr.begin(), arr.end(), sortR); float r = arr[0].r;
+    sort(arr.begin(), arr.end(), sortR); float g = arr[1].g;
     sort(arr.begin(), arr.end(), sortR); float b = arr[2].b;
     return Color3f(r,g,b) / 0.6745f;
 }
@@ -54,7 +64,7 @@ void HighPass(vector<Color3f> &a, vector<Color3f> &cx) {
         int end = glm::min(len - 1, i + 3);
         Color3f pass = Color3f(0.f);
         float delta = end - start;
-        for (int j = start; j <= end; j++) pass += kernel[glm::abs(j - i)] * a[j] / delta;
+        for (int j = start; j <= end; j++) pass += kernel[glm::abs(j - i)] * a[j] / delta / delta;
         cx.push_back(glm::max(pass, Color3f(0.f)));
     }
 }

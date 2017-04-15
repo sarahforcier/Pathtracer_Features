@@ -57,6 +57,7 @@ SOURCES += \
     $$PWD/scene/bvh.cpp \
     $$PWD/scene/geometry/csg.cpp \
     $$PWD/raytracing/kmeansfilter.cpp \
+    $$PWD/raytracing/filt.cpp \
     $$PWD/raytracing/denoise.cpp \
     $$PWD/raytracing/wavelet.cpp
 
@@ -118,5 +119,6 @@ HEADERS += \
     $$PWD/scene/bvh.h \
     $$PWD/scene/geometry/csg.h \
     $$PWD/raytracing/kmeansfilter.h \
+    $$PWD/raytracing/filt.h \
     $$PWD/raytracing/denoise.h \
     $$PWD/raytracing/wavelet.h
