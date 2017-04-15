@@ -4,6 +4,7 @@
 
 void Film::PostProcess() {
     denoise = std::make_shared<DeNoise>(pixels, sigma_sp, bounds.Max());
+    pixels = denoise->denoised_image;
 }
 
 void Film::SetDimensions(unsigned int w, unsigned int h)

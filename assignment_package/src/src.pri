@@ -58,9 +58,6 @@ SOURCES += \
     $$PWD/scene/geometry/csg.cpp \
     $$PWD/raytracing/kmeansfilter.cpp \
     $$PWD/raytracing/denoise.cpp \
-    $$PWD/raytracing/bm3d.cpp \
-    $$PWD/raytracing/lib_transforms.cpp \
-    $$PWD/raytracing/utilities.cpp \
     $$PWD/raytracing/wavelet.cpp
 
 
@@ -122,7 +119,4 @@ HEADERS += \
     $$PWD/scene/geometry/csg.h \
     $$PWD/raytracing/kmeansfilter.h \
     $$PWD/raytracing/denoise.h \
-    $$PWD/raytracing/bm3d.h \
-    $$PWD/raytracing/lib_transforms.h \
-    $$PWD/raytracing/utilities.h \
     $$PWD/raytracing/wavelet.h
