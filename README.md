@@ -8,24 +8,35 @@ Sarah Forcier
 Lens-based camera 
 --------
 
-![](./depth_cornell_no_denoise.png)
+| -----------	| :----------: 			| :-------: 			| :-------: 			|
+| Fical Length 	| 30 					| 30 					| 32 					|
+| Lens Radius 	| 0.5 					| 1.5 					| 1.5 					|
+| Image 	 	| ![](./depth30r05.png) | ![](./depth30r15.png) 	| ![](./depth32r15.png) |
+
 
 Constructive Solid Geometry
 ----------------
 ### Intersection
-![](./csg_intersection.png)
+![](./funsphere.png)
 
 ### Difference
-![](./csg_difference.png)
+![](./funsphere2.png)
 
 ### Union
-![](./csg_union.png)
+![](./funsphere3.png)
 
 De Noising
 -----------
-I implemented 1D K-means compression based on hue, and it looks terrible. I am implementing a new denoiser based on this paper: 
 
-Removing the Noise in Monte Carlo Rendering with General Image Denoising Algorithms
+### Full Lighting Integrator
 
-![](./depth_cornell_denoise360.png)
+![](./full.png) ![](./full_post.png)
+
+### Direct Lighting Integrator
+
+![](./direct.png) ![](./direct_post.png)
+
+### Naive Integrator
+
+![](./naive.png) ![](./naive_post.png)
 

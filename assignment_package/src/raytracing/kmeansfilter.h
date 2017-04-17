@@ -1,32 +1,36 @@
 #pragma once
 #include <globals.h>
+#include "samplers/sampler.h"
 
-// sort by hue
-struct Bucket;
+using namespace std;
 
+struct BucketInfo {
+    BucketInfo(Color3f color)
+        : original(color),
+          total_color(Color3f(0.f)),
+          num(0) {}
+    Color3f original;
+    Color3f total_color;
+    int num;
+    Color3f GetAvg() {return total_color/(float)num;}
+};
+
+// TODO: need to eliminate fireflies
 class K_MeansFilter
 {
 public:
     K_MeansFilter(std::vector<std::vector<Color3f>> p_colors,
-                  std::vector<std::vector<bool>> has_color, int num);
+                  std::vector<std::vector<Color3f>> stdev,int num);
     ~K_MeansFilter() {}
-
-    Color3f Evaluate(Color3f c);
+    Color3f Median(int i, int j);
+    Color3f Average(int i, int j);
+    Color3f Evaluate(int i, int j);
 
 private:
-    const int sqrt_buckets;
-    std::vector<std::vector<std::shared_ptr<Bucket>>> buckets; // H by S
+    vector<vector<Color3f>> original;
+    vector<vector<Color3f>> stdev;
+    vector<BucketInfo> buckets;
+    vector<vector<int>> bucketLocation; // which bucket each sample belongs to
+    int num_samples, w, h;
+    shared_ptr<Sampler> sampler;
 };
-
-static inline Vector2f GetHueSat(Color3f c) {
-    float min = glm::min(c.r, glm::min(c.g, c.b));
-    float max = glm::max(c.r, glm::max(c.g, c.b));
-    float delta = max - min;
-    if (min == max) return Vector2f(0.f);
-    float l = (min + max) / 2.f;
-    float d = (c.r == max) ? c.g - c.b :
-                ((c.b == max) ? c.r - c.g : c.b - c.r);
-    float h = (c.r == max) ? 0.f :
-                ((c.b == max) ? 4.f : 2.f);
-    return Vector2f(60.f * (d/delta + h), delta/(1.f - glm::abs(2.f*l - 1.f)));
-}

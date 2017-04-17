@@ -8,8 +8,10 @@
         "eye" : [0, 5.5, -30],
         "worldUp" : [0, 1, 0],
         "fov" : 19.5,
-        "width" : 100,
-        "height": 100
+        "width" : 400,
+        "height": 400,
+        "focalDistance": 32,
+        "lensRadius": 1.5
       },
       "primitives" : [
         {

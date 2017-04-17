@@ -3,8 +3,16 @@
 #include <QColor>
 
 void Film::PostProcess() {
-    denoise = std::make_shared<DeNoise>(pixels, sigma_sp, bounds.Max());
-    pixels = denoise->denoised_image;
+//    denoise = std::make_shared<DeNoise>(pixels, sigma_sp, bounds.Max());
+//    pixels = denoise->denoised_image;
+
+    kmeans = std::make_shared<K_MeansFilter>(pixels, sigma_sp, 256);
+    Point2i dim = bounds.Max();
+    for (int i = 0; i < dim.x; i ++) {
+        for (int j = 0; j < dim.y; j ++) {
+            pixels[i][j] = kmeans->Evaluate(i, j);
+        }
+    }
 }
 
 void Film::SetDimensions(unsigned int w, unsigned int h)

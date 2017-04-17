@@ -40,7 +40,8 @@ void Integrator::Render()
         film->SetPixelColor(pixel, glm::clamp(pixelColor, 0.f, 1.f));
 
         // calculate pixel stdev
-        film->SetSigma_Sp(pixel, GetStdDev(colors, pixelColor));
+        Color3f stdev = GetStdDev(colors, pixelColor);
+        film->SetSigma_Sp(pixel, stdev);
     }
 }
 

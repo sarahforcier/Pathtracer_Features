@@ -4,7 +4,6 @@ DeNoise::DeNoise(vector<vector<Color3f> > img,
                  vector<vector<Color3f> > sigma_sp,
                  Point2i dim) : noisy_image(img), w(dim.x), h(dim.y), win_size(8), g(3.f), buckets(1000) {
 
-    filter = vector<float> {-0.48296291314469025, 0.83651630373746899, -0.22414386804185735, -0.12940952255092145};
     Color3f max = SetNoiseMap(sigma_sp);
 
 //    vector<map<int, float>> cdf_map;
@@ -68,15 +67,17 @@ Color3f DeNoise::SetNoiseMap(vector<vector<Color3f>> sigma_sp)
 Color3f DeNoise::CalculateMedian(vector<vector<Color3f>> &sigma_wp)
 {
     Color3f max;
+    Wavelet *wavelet = new Wavelet(noisy_image, w, h);
     for (int i = 0; i < w; i ++) {
         vector<Color3f> row;
         for (int j = 0; j < h; j ++) {
 
-            Color3f color = MedAbsDev(noisy_image, w , h, Point2i(i,j)); max = glm::max(color, max);
+            Color3f color = wavelet->Evaluate(Point2i(i,j)); max = glm::max(color, max);
             row.push_back(color);
         }
         sigma_wp.push_back(row);
     }
+    delete wavelet;
     return max;
 }
 
@@ -85,7 +86,7 @@ void DeNoise::ComputeCDF(Color3f max, vector<map<int, float>> &cdf_map)
 {
     for (int c = 0; c < 3; c++) { // per color
         vector<int> hist = vector<int> (buckets);
-        map<int, float> cmap;
+
         std::fill(hist.begin(), hist.end(), 0);
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
@@ -95,6 +96,7 @@ void DeNoise::ComputeCDF(Color3f max, vector<map<int, float>> &cdf_map)
             }
         }
 
+        map<int, float> cmap;
         int count = 0.f;
         for (int j = 0; j < buckets; j ++) {
             count += hist[j];
