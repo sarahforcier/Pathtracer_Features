@@ -7,9 +7,9 @@ Sarah Forcier
 
 Lens-based camera 
 --------
-| Depth of Field 	|  					|  					| 					|
+|  	Depth of Field |
 | -----------	| :----------: 			| :-------: 			| :-------: 			|
-| Fical Length 	| 30 					| 30 					| 32 					|
+| Focal Length 	| 30 					| 30 					| 32 					|
 | Lens Radius 	| 0.5 					| 1.5 					| 1.5 					|
 | Image 	 	| ![](./depth30r05.png) | ![](./depth30r15.png) 	| ![](./depth32r15.png) |
 
