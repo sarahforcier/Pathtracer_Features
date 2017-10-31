@@ -25,7 +25,7 @@ Constructive Solid Geometry
 ### Union
 ![](./funsphere3.png)
 
-De Noising
+Post Processing
 -----------
 
 ### Full Lighting Integrator
